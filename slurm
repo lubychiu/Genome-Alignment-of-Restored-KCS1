@@ -48,3 +48,47 @@ $ MINLEN:75
 # Clean up environment
 $ module unload trimmomatic
 ```
+
+## Bowtie slurm script
+```bash
+#!/bin/bash
+#SBATCH --job-name=bowtie_kcs1
+#SBATCH --output=/home/yc1201/genome_alignment_kcs1/slurm/%x.o%j
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=erz12@georgetown.edu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=06:00:00
+#SBATCH --mem=8G
+#SBATCH --array=6-8
+
+# Establish base directory paths
+$ BASE_DIR="/home/yc1201/genome_alignment_kcs1"
+$ TRIM_DIR="${BASE_DIR}/results/trimmed"
+$ ALIGN_DIR="${BASE_DIR}/results/aligned"
+
+# Ensure alignment output folder exists
+$ mkdir -p ${ALIGN_DIR}
+
+# Map the SLURM Array ID to actual KCS1 sample names
+$ if [ ${SLURM_ARRAY_TASK_ID} -eq 6 ]; then
+    SAMPLE="Kcs1Restore6_S235"
+$ elif [ ${SLURM_ARRAY_TASK_ID} -eq 7 ]; then
+    SAMPLE="Kcs1Restore7_S236"
+$ elif [ ${SLURM_ARRAY_TASK_ID} -eq 8 ]; then
+    SAMPLE="Kcs1Restore8_S237"
+$ fi
+
+# Define input, reference, and output variables
+$ READ1="${TRIM_DIR}/${SAMPLE}_R1_paired.fq.gz"
+$ READ2="${TRIM_DIR}/${SAMPLE}_R2_paired.fq.gz"
+$ REFERENCE_INDEX="${BASE_DIR}/data/reference/ref"
+$ OUTPUT_FILE="${ALIGN_DIR}/${SAMPLE}.sam"
+
+# Run Bowtie2 alignment (using 4 threads to speed it up)
+$ module load bowtie2/2.5.3
+$ bowtie2 -p 4 -x $REFERENCE_INDEX -1 $READ1 -2 $READ2 -S $OUTPUT_FILE
+
+$ module unload bowtie2
+```
