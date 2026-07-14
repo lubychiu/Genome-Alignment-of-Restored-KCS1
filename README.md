@@ -6,7 +6,7 @@ summary of project...
 - Reference FASTA: /home/yc1201/genome_alignment_kcs1/data/reference
 - FastQC result output: /home/yc1201/genome_alignment_kcs1/results/qc
 - SAM/BAM files: /home/yc1201/genome_alignment_kcs1/results/aligned
-- scripts: /home/yc1201/genome_alignment_kcs1/slurm
+- Scripts: /home/yc1201/genome_alignment_kcs1/slurm
 
 ## Acquire FASTQ files of 3 candidates and upload to HPC
 - Kcs1Restore6_S235_R1_001.fastq.gz, Kcs1Restore6_S235_R2_001.fastq.gz
